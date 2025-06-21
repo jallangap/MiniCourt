@@ -1,5 +1,5 @@
 from app.models.user_model import User
-from app import ma
+from app.extensions import ma
 
 class UserSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
