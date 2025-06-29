@@ -8,6 +8,11 @@ const app = express();
 // Middlewares
 app.use(express.json());
 
+app.use((req, res, next) => {
+  console.log(`🔥 Nueva solicitud: ${req.method} ${req.originalUrl}`);
+  next();
+});
+
 // Database connection
 connectDB();
 

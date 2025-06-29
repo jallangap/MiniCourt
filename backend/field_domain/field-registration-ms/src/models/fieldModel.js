@@ -6,13 +6,24 @@ const fieldSchema = new mongoose.Schema({
     required: true,
   },
   location: {
-    type: String,
-    required: true,
+    city: {
+      type: String,
+      required: true,
+    },
+    sector: {
+      type: String,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+    }
   },
   type: {
     type: String,
-    enum: ['fútbol', 'básquet', 'tenis', 'pádel', 'otros'],
+    enum: ['cesped', 'sintetica', 'indor', 'otros'],
     default: 'otros',
+    required: true
   },
   capacity: {
     type: Number,
