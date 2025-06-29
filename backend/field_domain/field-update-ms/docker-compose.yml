@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  field-update-ms:
+    build: .
+    container_name: field-update-ms
+    ports:
+      - "5005:5005"
+    environment:
+      - MONGO_URI=mongodb://host.docker.internal:27017/field_registration_db
+      - PORT=5005
+    volumes:
+      - .:/app
+    restart: unless-stopped

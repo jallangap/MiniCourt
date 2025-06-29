@@ -1,0 +1,21 @@
+{
+  "name": "field-update-ms",
+  "version": "1.0.0",
+  "description": "Microservice for updating sports field information",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "MiniCourt Team",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}
