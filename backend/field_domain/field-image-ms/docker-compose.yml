@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  field-image-ms:
+    build: .
+    ports:
+      - "5006:5006"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/field_image_db
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

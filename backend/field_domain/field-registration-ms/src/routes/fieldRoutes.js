@@ -2,19 +2,19 @@ const express = require('express');
 const router = express.Router();
 const fieldController = require('../controllers/fieldController');
 
-// Ruta para crear un nuevo campo
+// Route to create a new field
 router.post('/', fieldController.createField);
 
-// Ruta para obtener todos los campos
+// Route to get all fields
 router.get('/', fieldController.getAllFields);
 
-// Ruta para obtener un campo por ID
+// Route to get a field by ID
 router.get('/:id', fieldController.getFieldById);
 
-// Ruta para actualizar un campo
+// Route to update a field
 router.put('/:id', fieldController.updateField);
 
-// Ruta para eliminar un campo
+// Route to delete a field
 router.delete('/:id', fieldController.deleteField);
 
 module.exports = router;

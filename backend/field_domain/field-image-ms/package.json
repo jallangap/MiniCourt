@@ -1,0 +1,16 @@
+{
+  "name": "field-image-ms",
+  "version": "1.0.0",
+  "description": "Microservice for updating field image URLs",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "MiniCourt",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.1"
+  }
+}
