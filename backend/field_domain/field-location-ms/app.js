@@ -5,22 +5,22 @@ const locationRoutes = require('./src/routes/locationRoutes');
 
 const app = express();
 
-// Middleware para parsear JSON
+// Middleware to parse JSON bodies
 app.use(express.json());
 
-// Middleware para registrar solicitudes
+// Middleware to log requests
 app.use((req, res, next) => {
   console.log(`📍 Nueva solicitud: ${req.method} ${req.originalUrl}`);
   next();
 });
 
-// Conexión a MongoDB
+// MongoDB Connection
 connectDB();
 
-// Rutas
+// Routes
 app.use('/api/fields', locationRoutes);
 
-// Inicio del servidor
+// Server start
 const PORT = process.env.PORT || 5007;
 app.listen(PORT, () => {
   console.log(`Field Location Service running on port ${PORT}`);

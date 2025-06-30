@@ -1,0 +1,14 @@
+version: '3'
+services:
+  field-type-ms:
+    build: .
+    ports:
+      - "5008:5008"
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
