@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:7
+    container_name: redis-availability
+    ports:
+      - "6379:6379"
+
+  availability-scheduler:
+    build: .
+    container_name: availability-scheduler-ms
+    ports:
+      - "5010:5010"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=
+      - PORT=5010
+    depends_on:
+      - redis
