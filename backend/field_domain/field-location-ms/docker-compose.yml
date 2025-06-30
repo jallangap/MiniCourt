@@ -1,0 +1,17 @@
+version: '3'
+services:
+  field-location-ms:
+    build: .
+    ports:
+      - "5007:5007"
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
