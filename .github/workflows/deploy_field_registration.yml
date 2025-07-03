@@ -1,0 +1,43 @@
+name: Deploy Field Registration MS to EC2
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/field_domain/field-registration-ms/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🔑 Set up SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY_FIELD }}
+
+      - name: 🐳 Login to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: 📦 Build and Push Docker Image
+        run: |
+          cd backend/field_domain/field-registration-ms
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/field-registration-ms:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/field-registration-ms:latest
+
+      - name: 🚀 Deploy to EC2 and run container
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.HOST_DNS_REGISTRATION }} << 'EOF'
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/field-registration-ms:latest
+            docker stop field-registration-ms || true
+            docker rm field-registration-ms || true
+            docker run -d \
+              --name field-registration-ms \
+              -p 5004:5004 \
+              --env-file ~/field.env \
+              ${{ secrets.DOCKERHUB_USERNAME }}/field-registration-ms:latest
+          EOF
