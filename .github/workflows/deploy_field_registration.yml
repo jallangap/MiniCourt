@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-
+      
     paths:
       - 'backend/field_domain/field-registration-ms/**'
 
@@ -35,6 +35,9 @@ jobs:
 
       - name: 🧪 Run basic health check test
         working-directory: ./backend/field_domain/field-registration-ms
+        env:
+          MONGO_URI: mongodb://localhost:27017/field_registration_db
+          PORT: 5004
         run: |
           echo "⚙️ Starting app temporarily to validate health..."
           node app.js &
