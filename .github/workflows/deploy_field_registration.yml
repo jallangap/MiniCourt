@@ -23,9 +23,28 @@ jobs:
       - name: 🐳 Login to DockerHub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-      - name: 📦 Build and Push Docker Image
+      - name: 📂 Navigate to microservice
+        working-directory: ./backend/field_domain/field-registration-ms
+        run: echo "📁 In microservice directory"
+
+      - name: ✅ Install Node.js dependencies
+        working-directory: ./backend/field_domain/field-registration-ms
+        run: npm install
+
+      - name: 🧪 Run basic health check test
+        working-directory: ./backend/field_domain/field-registration-ms
         run: |
-          cd backend/field_domain/field-registration-ms
+          echo "⚙️ Starting app temporarily to validate health..."
+          node app.js &
+          sleep 5
+          curl --fail http://localhost:5004/api/fields || (echo "❌ Health check failed" && exit 1)
+          echo "✅ Health check passed"
+          pkill node
+
+      - name: 📦 Build and Push Docker Image
+        working-directory: ./backend/field_domain/field-registration-ms
+        run: |
+
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/field-registration-ms:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/field-registration-ms:latest
 
@@ -38,6 +57,6 @@ jobs:
             docker run -d \
               --name field-registration-ms \
               -p 5004:5004 \
-              --env-file ~/field.env \
+              --env-file /home/ubuntu/MiniCourt/backend/field_domain/field-registration-ms/field.env \
               ${{ secrets.DOCKERHUB_USERNAME }}/field-registration-ms:latest
           EOF
