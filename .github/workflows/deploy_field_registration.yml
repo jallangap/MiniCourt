@@ -4,10 +4,8 @@ on:
   push:
     branches:
       - main
-      
     paths:
       - 'backend/field_domain/field-registration-ms/**'
-
 
 jobs:
   deploy:
@@ -33,12 +31,9 @@ jobs:
         working-directory: ./backend/field_domain/field-registration-ms
         run: npm install
 
-
-
       - name: 📦 Build and Push Docker Image
         working-directory: ./backend/field_domain/field-registration-ms
         run: |
-
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/field-registration-ms:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/field-registration-ms:latest
 
