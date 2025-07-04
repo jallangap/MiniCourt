@@ -1,0 +1,52 @@
+name: Deploy Field Update MS to EC2
+
+on:
+  push:
+    branches:
+      - main
+      
+    paths:
+      - 'backend/field_domain/field-update-ms/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🔑 Set up SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY_UPDATE }}
+
+      - name: 🐳 Login to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: 📂 Navigate to microservice
+        working-directory: ./backend/field_domain/field-update-ms
+        run: echo "📁 In microservice directory"
+
+      - name: ✅ Install Node.js dependencies
+        working-directory: ./backend/field_domain/field-update-ms
+        run: npm install
+
+      - name: 📦 Build and Push Docker Image
+        working-directory: ./backend/field_domain/field-update-ms
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/field-update-ms:latest .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/field-update-ms:latest
+
+      - name: 🚀 Deploy to EC2 and run container
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.HOST_DNS_UPDATE }} << 'EOF'
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/field-update-ms:latest
+            docker stop field-update-ms || true
+            docker rm field-update-ms || true
+            docker run -d \
+              --name field-update-ms \
+              -p 5005:5005 \
+              --env-file /home/ubuntu/MiniCourt/backend/field_domain/field-update-ms/.env \
+              ${{ secrets.DOCKERHUB_USERNAME }}/field-update-ms:latest
+          EOF
