@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      
+
     paths:
       - 'backend/field_domain/field-registration-ms/**'
 
@@ -32,8 +32,7 @@ jobs:
       - name: ✅ Install Node.js dependencies
         working-directory: ./backend/field_domain/field-registration-ms
         run: npm install
-
-      # ❌ Eliminamos el bloque que intentaba correr la app con Mongo local
+        
 
       - name: 📦 Build and Push Docker Image
         working-directory: ./backend/field_domain/field-registration-ms
