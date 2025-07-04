@@ -32,7 +32,7 @@ jobs:
       - name: ✅ Install Node.js dependencies
         working-directory: ./backend/field_domain/field-registration-ms
         run: npm install
-        
+
       - name: 🧪 Run basic health check test
         working-directory: ./backend/field_domain/field-registration-ms
         env:
@@ -42,20 +42,21 @@ jobs:
           echo "⚙️ Starting app temporarily to validate health..."
           node app.js &
           sleep 5
-          
+
+          echo "📡 Realizando POST a /api/fields con body válido..."
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST http://localhost:5004/api/fields \
             -H "Content-Type: application/json" \
             -d '{"name":"Test Field","location":{"city":"Quito","sector":"Centro","address":"Av. Central"},"type":"cesped","capacity":10}')
-          
+
           if [[ "$RESPONSE" == "200" || "$RESPONSE" == "201" ]]; then
             echo "✅ Health check passed (response: $RESPONSE)"
           else
             echo "❌ Health check failed (response: $RESPONSE)"
-            pkill node
+            pkill -f node
             exit 1
           fi
 
-          pkill node
+          pkill -f node
 
       - name: 📦 Build and Push Docker Image
         working-directory: ./backend/field_domain/field-registration-ms

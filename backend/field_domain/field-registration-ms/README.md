@@ -101,7 +101,3 @@ You can test the endpoint using Postman:
 - Logs printed to console. Integration with centralized logging (e.g., Logstash or Promtail) is suggested for production.
 
 ---
-
-
-
-
