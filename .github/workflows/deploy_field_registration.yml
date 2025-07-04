@@ -33,7 +33,7 @@ jobs:
         working-directory: ./backend/field_domain/field-registration-ms
         run: npm install
 
-      # ❌ Eliminamos el bloque que intentaba correr la app con Mongo local
+
 
       - name: 📦 Build and Push Docker Image
         working-directory: ./backend/field_domain/field-registration-ms
@@ -45,12 +45,12 @@ jobs:
       - name: 🚀 Deploy to EC2 and run container
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.HOST_DNS_REGISTRATION }} << 'EOF'
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/field-registration-ms:latest
-            docker stop field-registration-ms || true
-            docker rm field-registration-ms || true
-            docker run -d \
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/field-registration-ms:latest
+            sudo docker stop field-registration-ms || true
+            sudo docker rm field-registration-ms || true
+            sudo docker run -d \
               --name field-registration-ms \
-              -p 5004:5004 \
+              --network host \
               --env-file /home/ubuntu/MiniCourt/backend/field_domain/field-registration-ms/field.env \
               ${{ secrets.DOCKERHUB_USERNAME }}/field-registration-ms:latest
           EOF
